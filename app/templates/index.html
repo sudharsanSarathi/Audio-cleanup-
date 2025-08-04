@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AudioEnhance Pro - Professional Audio & Video Enhancement</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --accent-color: #06b6d4;
+            --dark-color: #1e293b;
+            --light-color: #f8fafc;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--dark-color);
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 4rem 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #64748b;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .upload-container {
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            margin: 2rem 0;
+        }
+        
+        .upload-area {
+            border: 3px dashed #cbd5e1;
+            border-radius: 15px;
+            padding: 3rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: #f8fafc;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background: #f1f5f9;
+        }
+        
+        .upload-area.dragover {
+            border-color: var(--primary-color);
+            background: #e0e7ff;
+        }
+        
+        .upload-icon {
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .progress-container {
+            display: none;
+            margin-top: 2rem;
+        }
+        
+        .progress {
+            height: 10px;
+            border-radius: 5px;
+            background: #e2e8f0;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 5px;
+        }
+        
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        .status-processing {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-failed {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white !important;
+        }
+        
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: white !important;
+        }
+        
+        .footer {
+            background: rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem 0;
+            margin-top: 4rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-waveform-lines me-2"></i>
+                AudioEnhance Pro
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="#features">Features</a>
+                <a class="nav-link" href="#pricing">Pricing</a>
+                <a class="nav-link" href="/login">Login</a>
+                <a class="nav-link btn btn-primary ms-2" href="/register">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <h1 class="hero-title">Transform Your Audio & Video</h1>
+            <p class="hero-subtitle">
+                Professional-grade noise reduction and audio enhancement powered by cutting-edge AI. 
+                Clean up recordings, enhance speech clarity, and deliver crystal-clear content.
+            </p>
+            <div class="d-flex justify-content-center gap-3">
+                <button class="btn btn-primary btn-lg" onclick="scrollToUpload()">
+                    <i class="fas fa-upload me-2"></i>
+                    Start Processing
+                </button>
+                <button class="btn btn-outline-light btn-lg" onclick="playDemo()">
+                    <i class="fas fa-play me-2"></i>
+                    Watch Demo
+                </button>
+            </div>
+        </div>
+
+        <!-- Upload Section -->
+        <div class="upload-container" id="upload-section">
+            <h2 class="text-center mb-4">Upload Your Audio or Video</h2>
+            <div class="upload-area" id="upload-area">
+                <div class="upload-icon">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h4>Drag & Drop Files Here</h4>
+                <p class="text-muted mb-3">or click to browse</p>
+                <input type="file" id="file-input" accept=".mp3,.wav,.flac,.m4a,.mp4,.avi,.mov,.mkv" style="display: none;">
+                <button class="btn btn-primary" onclick="document.getElementById('file-input').click()">
+                    Choose File
+                </button>
+                <div class="mt-3">
+                    <small class="text-muted">
+                        Supported formats: MP3, WAV, FLAC, M4A, MP4, AVI, MOV, MKV (Max 100MB)
+                    </small>
+                </div>
+            </div>
+
+            <!-- Progress Section -->
+            <div class="progress-container" id="progress-container">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-semibold">Processing...</span>
+                    <span class="text-muted" id="progress-text">0%</span>
+                </div>
+                <div class="progress">
+                    <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+                </div>
+                <div class="mt-3">
+                    <span class="status-badge status-processing" id="status-badge">
+                        <i class="fas fa-spinner fa-spin me-2"></i>
+                        Processing
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="row mt-5" id="features">
+            <div class="col-12 text-center mb-5">
+                <h2>Powerful Features</h2>
+                <p class="text-muted">Everything you need for professional audio enhancement</p>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-microphone-slash"></i>
+                    </div>
+                    <h4>Noise Reduction</h4>
+                    <p class="text-muted">
+                        Advanced AI-powered noise reduction that removes background noise, 
+                        hum, and unwanted sounds while preserving audio quality.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-volume-up"></i>
+                    </div>
+                    <h4>Speech Enhancement</h4>
+                    <p class="text-muted">
+                        Enhance speech clarity and intelligibility using state-of-the-art 
+                        Wav2Vec2 models for crystal-clear voice recordings.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <h4>Video Support</h4>
+                    <p class="text-muted">
+                        Process video files by extracting and enhancing audio tracks, 
+                        then recombining with original video for perfect results.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                    <h4>AI-Powered</h4>
+                    <p class="text-muted">
+                        Leverage cutting-edge machine learning models including 
+                        Facebook's Wav2Vec2 and Demucs for superior results.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h4>Fast Processing</h4>
+                    <p class="text-muted">
+                        Optimized processing pipeline with GPU acceleration for 
+                        quick turnaround times on large files.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h4>Secure & Private</h4>
+                    <p class="text-muted">
+                        Your files are processed securely and automatically deleted 
+                        after processing. Your privacy is our priority.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container text-center">
+            <p class="text-white mb-0">
+                © 2024 AudioEnhance Pro. Powered by cutting-edge AI technology.
+            </p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // File upload handling
+        const uploadArea = document.getElementById('upload-area');
+        const fileInput = document.getElementById('file-input');
+        const progressContainer = document.getElementById('progress-container');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const statusBadge = document.getElementById('status-badge');
+
+        // Drag and drop functionality
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFile(e.target.files[0]);
+            }
+        });
+
+        function handleFile(file) {
+            // Validate file type
+            const allowedTypes = [
+                'audio/mp3', 'audio/wav', 'audio/flac', 'audio/m4a',
+                'video/mp4', 'video/avi', 'video/quicktime', 'video/x-matroska'
+            ];
+            
+            if (!allowedTypes.includes(file.type)) {
+                alert('Please select a valid audio or video file.');
+                return;
+            }
+
+            // Validate file size (100MB)
+            if (file.size > 100 * 1024 * 1024) {
+                alert('File size must be less than 100MB.');
+                return;
+            }
+
+            // Show progress
+            progressContainer.style.display = 'block';
+            uploadArea.style.display = 'none';
+
+            // Simulate upload and processing
+            simulateProcessing();
+        }
+
+        function simulateProcessing() {
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress > 100) progress = 100;
+                
+                progressBar.style.width = progress + '%';
+                progressText.textContent = Math.round(progress) + '%';
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        statusBadge.className = 'status-badge status-completed';
+                        statusBadge.innerHTML = '<i class="fas fa-check me-2"></i>Completed';
+                        statusBadge.style.background = '#d1fae5';
+                        statusBadge.style.color = '#065f46';
+                    }, 1000);
+                }
+            }, 500);
+        }
+
+        function scrollToUpload() {
+            document.getElementById('upload-section').scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        function playDemo() {
+            // Implement demo video playback
+            alert('Demo video would play here');
+        }
+    </script>
+</body>
+</html>

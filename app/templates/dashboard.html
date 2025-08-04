@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - AudioEnhance Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --secondary-color: #8b5cf6;
+            --accent-color: #06b6d4;
+            --dark-color: #1e293b;
+            --light-color: #f8fafc;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+            color: var(--dark-color);
+        }
+        
+        .sidebar {
+            background: white;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            z-index: 1000;
+        }
+        
+        .main-content {
+            margin-left: 250px;
+            padding: 2rem;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .sidebar-brand {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--primary-color);
+        }
+        
+        .nav-link {
+            color: #64748b;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            margin: 0.25rem 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background: #e0e7ff;
+            color: var(--primary-color);
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .upload-area {
+            border: 2px dashed #cbd5e1;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: #f8fafc;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background: #f1f5f9;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+        
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.875rem;
+        }
+        
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-processing {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .status-completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-failed {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .file-card {
+            transition: all 0.3s ease;
+        }
+        
+        .file-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress {
+            height: 8px;
+            border-radius: 4px;
+        }
+        
+        .progress-bar {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-brand">
+                <i class="fas fa-waveform-lines me-2"></i>
+                AudioEnhance Pro
+            </div>
+        </div>
+        
+        <nav class="nav flex-column mt-3">
+            <a class="nav-link active" href="#dashboard">
+                <i class="fas fa-tachometer-alt me-2"></i>
+                Dashboard
+            </a>
+            <a class="nav-link" href="#files">
+                <i class="fas fa-folder me-2"></i>
+                My Files
+            </a>
+            <a class="nav-link" href="#processing">
+                <i class="fas fa-cogs me-2"></i>
+                Processing
+            </a>
+            <a class="nav-link" href="#settings">
+                <i class="fas fa-cog me-2"></i>
+                Settings
+            </a>
+            <a class="nav-link" href="/logout">
+                <i class="fas fa-sign-out-alt me-2"></i>
+                Logout
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1 class="h3 mb-1">Welcome back, {{ user.username }}!</h1>
+                <p class="text-muted">Manage your audio and video processing</p>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                    <i class="fas fa-upload me-2"></i>
+                    Upload File
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h3 class="mb-1" id="total-files">0</h3>
+                            <p class="mb-0 opacity-75">Total Files</p>
+                        </div>
+                        <i class="fas fa-folder fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h3 class="mb-1" id="completed-files">0</h3>
+                            <p class="mb-0 opacity-75">Completed</p>
+                        </div>
+                        <i class="fas fa-check-circle fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h3 class="mb-1" id="processing-files">0</h3>
+                            <p class="mb-0 opacity-75">Processing</p>
+                        </div>
+                        <i class="fas fa-spinner fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stats-card">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h3 class="mb-1" id="failed-files">0</h3>
+                            <p class="mb-0 opacity-75">Failed</p>
+                        </div>
+                        <i class="fas fa-exclamation-triangle fa-2x opacity-75"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Files -->
+        <div class="card">
+            <div class="card-header bg-white border-0">
+                <h5 class="mb-0">Recent Files</h5>
+            </div>
+            <div class="card-body">
+                <div id="files-list">
+                    <!-- Files will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upload Modal -->
+    <div class="modal fade" id="uploadModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Upload Audio or Video File</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="upload-area" id="modal-upload-area">
+                        <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                        <h5>Drag & Drop Files Here</h5>
+                        <p class="text-muted mb-3">or click to browse</p>
+                        <input type="file" id="modal-file-input" accept=".mp3,.wav,.flac,.m4a,.mp4,.avi,.mov,.mkv" style="display: none;">
+                        <button class="btn btn-primary" onclick="document.getElementById('modal-file-input').click()">
+                            Choose File
+                        </button>
+                        <div class="mt-3">
+                            <small class="text-muted">
+                                Supported formats: MP3, WAV, FLAC, M4A, MP4, AVI, MOV, MKV (Max 100MB)
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <div id="upload-progress" style="display: none;">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-semibold">Uploading...</span>
+                            <span class="text-muted" id="upload-progress-text">0%</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar" id="upload-progress-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mock data for demonstration
+        const mockFiles = [
+            {
+                id: 1,
+                filename: "interview_recording.mp3",
+                file_type: "audio",
+                status: "completed",
+                progress: 100,
+                created_at: "2024-01-15T10:30:00Z",
+                file_size: 15420000
+            },
+            {
+                id: 2,
+                filename: "podcast_episode.wav",
+                file_type: "audio",
+                status: "processing",
+                progress: 65,
+                created_at: "2024-01-15T09:15:00Z",
+                file_size: 45200000
+            },
+            {
+                id: 3,
+                filename: "meeting_video.mp4",
+                file_type: "video",
+                status: "pending",
+                progress: 0,
+                created_at: "2024-01-15T08:45:00Z",
+                file_size: 125000000
+            }
+        ];
+
+        // Load dashboard data
+        function loadDashboard() {
+            updateStats();
+            loadFiles();
+        }
+
+        function updateStats() {
+            const stats = {
+                total: mockFiles.length,
+                completed: mockFiles.filter(f => f.status === 'completed').length,
+                processing: mockFiles.filter(f => f.status === 'processing').length,
+                failed: mockFiles.filter(f => f.status === 'failed').length
+            };
+
+            document.getElementById('total-files').textContent = stats.total;
+            document.getElementById('completed-files').textContent = stats.completed;
+            document.getElementById('processing-files').textContent = stats.processing;
+            document.getElementById('failed-files').textContent = stats.failed;
+        }
+
+        function loadFiles() {
+            const filesList = document.getElementById('files-list');
+            filesList.innerHTML = '';
+
+            mockFiles.forEach(file => {
+                const fileCard = createFileCard(file);
+                filesList.appendChild(fileCard);
+            });
+        }
+
+        function createFileCard(file) {
+            const card = document.createElement('div');
+            card.className = 'card file-card mb-3';
+            
+            const statusClass = `status-${file.status}`;
+            const statusIcon = getStatusIcon(file.status);
+            
+            card.innerHTML = `
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-${file.file_type === 'video' ? 'video' : 'music'} fa-2x text-muted me-3"></i>
+                                <div>
+                                    <h6 class="mb-1">${file.filename}</h6>
+                                    <small class="text-muted">
+                                        ${formatFileSize(file.file_size)} • ${formatDate(file.created_at)}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <span class="status-badge ${statusClass}">
+                                ${statusIcon} ${file.status.charAt(0).toUpperCase() + file.status.slice(1)}
+                            </span>
+                        </div>
+                        <div class="col-md-3">
+                            ${file.status === 'processing' ? `
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: ${file.progress}%"></div>
+                                </div>
+                                <small class="text-muted">${file.progress}%</small>
+                            ` : ''}
+                            ${file.status === 'completed' ? `
+                                <button class="btn btn-sm btn-primary">
+                                    <i class="fas fa-download me-1"></i>Download
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        function getStatusIcon(status) {
+            switch(status) {
+                case 'pending': return '<i class="fas fa-clock me-1"></i>';
+                case 'processing': return '<i class="fas fa-spinner fa-spin me-1"></i>';
+                case 'completed': return '<i class="fas fa-check me-1"></i>';
+                case 'failed': return '<i class="fas fa-exclamation-triangle me-1"></i>';
+                default: return '';
+            }
+        }
+
+        function formatFileSize(bytes) {
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            if (bytes === 0) return '0 Bytes';
+            const i = Math.floor(Math.log(bytes) / Math.log(1024));
+            return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i];
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString();
+        }
+
+        // File upload handling
+        const modalUploadArea = document.getElementById('modal-upload-area');
+        const modalFileInput = document.getElementById('modal-file-input');
+        const uploadProgress = document.getElementById('upload-progress');
+        const uploadProgressBar = document.getElementById('upload-progress-bar');
+        const uploadProgressText = document.getElementById('upload-progress-text');
+
+        modalUploadArea.addEventListener('click', () => {
+            modalFileInput.click();
+        });
+
+        modalFileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileUpload(e.target.files[0]);
+            }
+        });
+
+        function handleFileUpload(file) {
+            // Validate file
+            const allowedTypes = [
+                'audio/mp3', 'audio/wav', 'audio/flac', 'audio/m4a',
+                'video/mp4', 'video/avi', 'video/quicktime', 'video/x-matroska'
+            ];
+            
+            if (!allowedTypes.includes(file.type)) {
+                alert('Please select a valid audio or video file.');
+                return;
+            }
+
+            if (file.size > 100 * 1024 * 1024) {
+                alert('File size must be less than 100MB.');
+                return;
+            }
+
+            // Show progress
+            modalUploadArea.style.display = 'none';
+            uploadProgress.style.display = 'block';
+
+            // Simulate upload
+            simulateUpload();
+        }
+
+        function simulateUpload() {
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 20;
+                if (progress > 100) progress = 100;
+                
+                uploadProgressBar.style.width = progress + '%';
+                uploadProgressText.textContent = Math.round(progress) + '%';
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        // Close modal and refresh
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('uploadModal'));
+                        modal.hide();
+                        loadDashboard();
+                        
+                        // Reset upload area
+                        modalUploadArea.style.display = 'block';
+                        uploadProgress.style.display = 'none';
+                        uploadProgressBar.style.width = '0%';
+                        uploadProgressText.textContent = '0%';
+                    }, 1000);
+                }
+            }, 200);
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', loadDashboard);
+    </script>
+</body>
+</html>
